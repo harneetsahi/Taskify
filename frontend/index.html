@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Taskify</title>
+
+    <style>
+      body {
+        background-color: rgb(50, 50, 50);
+      }
+    </style>
+  </head>
+
+  <body>
+    <input class="firstNum" type="text" placeholder="enter first num" />
+    <input class="secondNum" type="text" placeholder="enter second num" />
+    <button onclick="sendRequest()">Find sum</button>
+
+    <div class="result"></div>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./index.js"></script>
+  </body>
+</html>
