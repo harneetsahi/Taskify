@@ -6,4 +6,4 @@
 2. axios
 3. cors
 4. jwt
-5.
+5. nodemon
