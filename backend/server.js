@@ -2,12 +2,6 @@ import express from "express";
 import cors from "cors";
 import jwt from "jsonwebtoken";
 
-// import { fileURLToPath } from "url";
-// import { dirname } from "path";
-
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
-
 const JWT_SECRET = "asdasdjhaskdjakdaskssnf";
 const app = express();
 app.use(express.json());
@@ -16,11 +10,18 @@ const port = 3000;
 
 const users = [];
 
-app.get("/", (req, res) => {
-  res.sendFile(
-    "/Users/harneetsahi/Downloads/coding/webdev/todoapp/frontend/src/index.html"
-  );
-});
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
+
+// app.get("/", (req, res) => {
+//   res.sendFile(
+//     "/Users/harneetsahi/Downloads/coding/webdev/todoapp/frontend/src/index.html"
+//   );
+// });
 
 app.post("/signup", (req, res) => {
   const username = req.body.username;
@@ -106,3 +107,5 @@ app.get("/me", auth, (req, res) => {
 });
 
 app.listen(port);
+
+////////////////////////////////////////////////!SECTION
