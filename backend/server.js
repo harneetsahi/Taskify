@@ -2,13 +2,13 @@ import express from "express";
 import cors from "cors";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "asdasdjhaskdjakdaskssnf";
+import { UserModel, TodoModel } from "./db/index.js";
+
 const app = express();
-app.use(express.json());
-
 const port = 3000;
-
 const users = [];
+
+const JWT_SECRET = "asdasdjhaskdjakdaskssnf";
 
 app.use(
   cors({
@@ -17,11 +17,21 @@ app.use(
   })
 );
 
+app.use(express.json()); // parsing json requests
+
 // app.get("/", (req, res) => {
 //   res.sendFile(
 //     "/Users/harneetsahi/Downloads/coding/webdev/todoapp/frontend/src/index.html"
 //   );
 // });
+
+app.post("/signup", (req, res) => {
+  UserModel.insert({
+    name: "harneet",
+    email: "harneet@gmail.com",
+    password: "randompass",
+  });
+});
 
 app.post("/signup", (req, res) => {
   const username = req.body.username;
@@ -106,6 +116,14 @@ app.get("/me", auth, (req, res) => {
   }
 });
 
+////!SECTION todos
+
+app.post("/todo", (req, res) => {});
+
+app.get("/todos", (req, res) => {});
+
 app.listen(port);
 
 ////////////////////////////////////////////////!SECTION
+
+export { app };
