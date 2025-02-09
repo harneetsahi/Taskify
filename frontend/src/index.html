@@ -3,23 +3,136 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link rel="stylesheet" href="./style.css" /> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
     <title>Taskify</title>
 
     <style>
       body {
-        background-color: rgb(50, 50, 50);
+        background: linear-gradient(
+          0.2turn,
+          rgb(42, 115, 192),
+          rgb(246, 159, 174)
+        );
+        height: 100vh;
       }
     </style>
   </head>
 
   <body>
-    <input class="firstNum" type="text" placeholder="enter first num" />
-    <input class="secondNum" type="text" placeholder="enter second num" />
-    <button onclick="sendRequest()">Find sum</button>
+    <div class="container">
+      <div class="signup-container">
+        <h2>Sign up</h2>
 
-    <div class="result"></div>
+        <form action="" class="form">
+          <div class="input-container">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              placeholder="Type your username"
+              id="signup-username"
+            />
+          </div>
+          <div class="input-container">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              placeholder="Type your password"
+              id="signup-password"
+            />
+          </div>
+          <button class="signupBtn btn" onclick="signUp(event)">Sign up</button>
+        </form>
+        <!-- <div class="redirect-container">
+          <p>Or Log in using</p>
+          <a href="#">Log in</a>
+        </div> -->
+      </div>
+
+      <div class="login-container">
+        <h2>Log in</h2>
+
+        <form action="" class="form">
+          <div class="input-container">
+            <label for="username"></label>
+            <input type="text" placeholder="username" id="login-username" />
+          </div>
+          <div class="input-container">
+            <label for="password"></label>
+            <input type="password" placeholder="password" id="login-password" />
+          </div>
+          <button class="loginBtn btn" onclick="login(event)">Log in</button>
+        </form>
+        <!-- <div>
+          <p>Or Sign up using</p>
+          <a href="#">Sign up</a>
+        </div> -->
+      </div>
+
+      <div class="information-container">
+        <div id="userInfo">User Information:</div>
+      </div>
+      <div>
+        <button class="btn logoutBtn" onclick="logout()">Logout</button>
+      </div>
+    </div>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="./index.js"></script>
+    <script>
+      async function signUp(e) {
+        e.preventDefault();
+
+        const username = document.getElementById("signup-username").value;
+        const password = document.getElementById("signup-password").value;
+
+        const response = await axios.post("http://localhost:3000/signup", {
+          username,
+          password,
+        });
+
+        alert("you are signed up");
+      }
+
+      async function login(e) {
+        e.preventDefault();
+
+        const username = document.getElementById("login-username").value;
+        const password = document.getElementById("login-password").value;
+
+        const response = await axios.post("http://localhost:3000/login", {
+          username,
+          password,
+        });
+
+        localStorage.setItem("token", response.data.token);
+
+        alert("Successfully logged in");
+      }
+
+      async function getUserInfo() {
+        const response = await axios.get("http://localhost:3000/me", {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        });
+
+        document.getElementById(
+          "userInfo"
+        ).innerHTML = `Welcome! Here are you crendentials: Username: ${response.data.username}`;
+      }
+
+      function logout() {
+        localStorage.removeItem("token");
+      }
+
+      getUserInfo();
+    </script>
+    <!-- <script src="./index.js"></script> -->
   </body>
 </html>

@@ -2,13 +2,25 @@ import express from "express";
 import cors from "cors";
 import jwt from "jsonwebtoken";
 
+// import { fileURLToPath } from "url";
+// import { dirname } from "path";
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
+
 const JWT_SECRET = "asdasdjhaskdjakdaskssnf";
 const app = express();
-const port = 3000;
-
 app.use(express.json());
 
+const port = 3000;
+
 const users = [];
+
+app.get("/", (req, res) => {
+  res.sendFile(
+    "/Users/harneetsahi/Downloads/coding/webdev/todoapp/frontend/src/index.html"
+  );
+});
 
 app.post("/signup", (req, res) => {
   const username = req.body.username;
@@ -18,22 +30,24 @@ app.post("/signup", (req, res) => {
     res.json({
       message: "Please enter a valid username and password",
     });
+    console.log("Please enter a valid username and password");
   }
 
   const user = users.find((user) => user.username === username);
 
   if (user) {
     res.json("Please sign in using your existing account");
+    console.log("Please sign in using your existing account");
+  } else {
+    users.push({ username, password });
+
+    res.json({
+      message: "You have successfully signed up",
+    });
   }
-
-  users.push({ username, password });
-
-  res.json({
-    message: "You have successfully signed up",
-  });
 });
 
-app.post("/signin", (req, res) => {
+app.post("/login", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
@@ -61,19 +75,33 @@ app.post("/signin", (req, res) => {
   }
 });
 
-app.get("/me", (req, res) => {
-  const token = req.headers.authorization;
+//// middlware
+function auth(req, res, next) {
+  const token = req.headers.token;
   const decodedInfo = jwt.verify(token, JWT_SECRET);
 
-  if (decodedInfo.username) {
-    const user = users.find((user) => user.username === decodedInfo.username);
+  if (!token) {
+    throw new Error("Unauthorized request");
+  }
 
-    if (user) {
-      res.json({
-        username: user.username,
-        password: user.password,
-      });
-    }
+  if (decodedInfo.username) {
+    req.username = decodedInfo.username; /// passing on username via req.username
+    next();
+  } else {
+    res.json({
+      message: "You are not logged in",
+    });
+  }
+}
+
+app.get("/me", auth, (req, res) => {
+  const user = users.find((user) => user.username === req.username);
+
+  if (user) {
+    res.json({
+      username: user.username,
+      password: user.password,
+    });
   }
 });
 
