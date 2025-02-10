@@ -1,11 +1,11 @@
 async function signUp(e) {
   e.preventDefault();
 
-  const username = document.getElementById("signup-username").value;
+  const email = document.getElementById("signup-email").value;
   const password = document.getElementById("signup-password").value;
 
   const response = await axios.post("http://localhost:3000/signup", {
-    username,
+    email,
     password,
   });
 
@@ -15,11 +15,11 @@ async function signUp(e) {
 async function login(e) {
   e.preventDefault();
 
-  const username = document.getElementById("login-username").value;
+  const email = document.getElementById("login-email").value;
   const password = document.getElementById("login-password").value;
 
   const response = await axios.post("http://localhost:3000/login", {
-    username,
+    email,
     password,
   });
 
@@ -37,11 +37,11 @@ async function getUserInfo() {
 
   document.getElementById(
     "userInfo"
-  ).innerHTML = `Welcome! Here are you crendentials: Username: ${response.data.username}`;
+  ).innerHTML = `Welcome! ${response.data.name}`;
 }
 
 function logout() {
   localStorage.removeItem("token");
 }
 
-getUserInfo();
+// getUserInfo();

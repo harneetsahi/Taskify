@@ -20,13 +20,19 @@
 
         <form action="" class="form">
           <div class="input-container">
-            <label for="username">Username</label>
+            <label for="Name">Name</label>
+            <input type="text" placeholder="Type your name" id="signup-name" />
+          </div>
+
+          <div class="input-container">
+            <label for="email">Email</label>
             <input
-              type="text"
-              placeholder="Type your username"
-              id="signup-username"
+              type="email"
+              placeholder="Type your email"
+              id="signup-email"
             />
           </div>
+
           <div class="input-container">
             <label for="password">Password</label>
             <input
@@ -48,12 +54,20 @@
 
         <form action="" class="form">
           <div class="input-container">
-            <label for="username"></label>
-            <input type="text" placeholder="username" id="login-username" />
+            <label for="email"></label>
+            <input
+              type="text"
+              placeholder="Enter your email"
+              id="login-email"
+            />
           </div>
           <div class="input-container">
             <label for="password"></label>
-            <input type="password" placeholder="password" id="login-password" />
+            <input
+              type="password"
+              placeholder="Enter your password"
+              id="login-password"
+            />
           </div>
           <button class="loginBtn btn" onclick="login(event)">Log in</button>
         </form>
@@ -72,55 +86,6 @@
     </div>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <!-- <script>
-      async function signUp(e) {
-        e.preventDefault();
-
-        const username = document.getElementById("signup-username").value;
-        const password = document.getElementById("signup-password").value;
-
-        const response = await axios.post("http://localhost:3000/signup", {
-          username,
-          password,
-        });
-
-        alert("you are signed up");
-      }
-
-      async function login(e) {
-        e.preventDefault();
-
-        const username = document.getElementById("login-username").value;
-        const password = document.getElementById("login-password").value;
-
-        const response = await axios.post("http://localhost:3000/login", {
-          username,
-          password,
-        });
-
-        localStorage.setItem("token", response.data.token);
-
-        alert("Successfully logged in");
-      }
-
-      async function getUserInfo() {
-        const response = await axios.get("http://localhost:3000/me", {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
-        });
-
-        document.getElementById(
-          "userInfo"
-        ).innerHTML = `Welcome! Here are you crendentials: Username: ${response.data.username}`;
-      }
-
-      function logout() {
-        localStorage.removeItem("token");
-      }
-
-      getUserInfo();
-    </script> -->
     <script src="./index.js"></script>
   </body>
 </html>

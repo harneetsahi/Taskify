@@ -1,45 +1,13 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-const ObjectId = mongoose.ObjectId;
+const connectDB = async () => {
+  try {
+    await mongoose.connect(
+      "mongodb+srv://harneet:harneet@cluster0.z7e9l.mongodb.net/taskify"
+    );
+  } catch (error) {
+    console.log("MONGODB connection failed");
+  }
+};
 
-const UserSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-    index: true,
-  },
-
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
-  },
-
-  password: {
-    type: String,
-    required: true,
-  },
-});
-
-const TodoSchema = new Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-
-  done: {
-    type: Boolean,
-  },
-
-  userId: {
-    type: ObjectId,
-  },
-});
-
-const UserModel = mongoose.model("users", UserSchema);
-const TodoModel = mongoose.model("todos", TodoSchema);
-
-export { UserModel, TodoModel };
+export default connectDB;
