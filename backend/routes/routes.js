@@ -2,6 +2,7 @@ import { app } from "../app.js";
 import { UserModel, TodoModel } from "../model/users.model.js";
 import { auth } from "../middleware/auth.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const JWT_SECRET = "asdasasdasd";
 
@@ -10,11 +11,17 @@ app.post("/signup", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
+  console.log(password);
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  console.log(hashedPassword);
+
   try {
     await UserModel.create({
       name: name,
       email: email,
-      password: password,
+      password: hashedPassword,
     });
 
     res.json({
@@ -33,13 +40,21 @@ app.post("/login", async (req, res) => {
 
   const user = await UserModel.findOne({
     email,
-    password,
   });
+
+  if (!user) {
+    res.json({
+      message: "User not found",
+    });
+    return;
+  }
+
+  const matchPassword = await bcrypt.compare(password, user.password);
 
   console.log(user);
 
   try {
-    if (user) {
+    if (matchPassword) {
       const token = jwt.sign({ id: user._id }, JWT_SECRET);
 
       res.json({
