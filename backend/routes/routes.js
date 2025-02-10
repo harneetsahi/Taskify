@@ -3,21 +3,16 @@ import { UserModel, TodoModel } from "../model/users.model.js";
 import { auth } from "../middleware/auth.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-
-const JWT_SECRET = "asdasasdasd";
+import { z } from "zod";
 
 app.post("/signup", async (req, res) => {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
 
-  console.log(password);
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  console.log(hashedPassword);
-
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     await UserModel.create({
       name: name,
       email: email,
@@ -29,7 +24,7 @@ app.post("/signup", async (req, res) => {
     });
   } catch (error) {
     res.json({
-      message: error,
+      message: "User already exists",
     });
   }
 });
@@ -38,38 +33,30 @@ app.post("/login", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  const user = await UserModel.findOne({
-    email,
-  });
-
-  if (!user) {
-    res.json({
-      message: "User not found",
-    });
-    return;
-  }
-
-  const matchPassword = await bcrypt.compare(password, user.password);
-
-  console.log(user);
-
   try {
-    if (matchPassword) {
-      const token = jwt.sign({ id: user._id }, JWT_SECRET);
+    const user = await UserModel.findOne({
+      email,
+    });
 
-      res.json({
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const matchPassword = await bcrypt.compare(password, user.password);
+
+    if (matchPassword) {
+      const token = jwt.sign({ id: user._id }, `${process.env.JWT_SECRET}`);
+
+      return res.json({
         message: token,
       });
     } else {
-      console.log("Incorrect crendentials");
-      res.status(403).json({
-        message: "Incorrect crendentials",
-      });
+      return res.status(401).json({ message: "Incorrect credentials" });
     }
   } catch (error) {
-    res.json({
-      message: "Error logging in",
-    });
+    console.error("Error logging in:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -101,10 +88,8 @@ app.get("/todos", auth, async (req, res) => {
   try {
     const todos = await TodoModel.find({ userId });
 
-    const todoTitles = todos.map((todo) => todo.title);
-
     res.json({
-      allTodos: todoTitles,
+      todos,
     });
   } catch (error) {
     res.json({

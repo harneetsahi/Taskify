@@ -1,9 +1,8 @@
 import jwt from "jsonwebtoken";
-const JWT_SECRET = "asdasasdasd";
 
 export function auth(req, res, next) {
   const token = req.headers.token;
-  const decodedInfo = jwt.verify(token, JWT_SECRET);
+  const decodedInfo = jwt.verify(token, `${process.env.JWT_SECRET}`);
 
   if (!token) {
     throw new Error("Unauthorized request");

@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
+import "dotenv/config";
+
+const DB_NAME = "taskify";
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(
-      "mongodb+srv://harneet:harneet@cluster0.z7e9l.mongodb.net/taskify"
-    );
+    await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`);
   } catch (error) {
     console.log("MONGODB connection failed");
   }
