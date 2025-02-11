@@ -6,6 +6,34 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 
 app.post("/signup", async (req, res) => {
+  // input validation using zod
+
+  const requiredBody = z.object({
+    name: z.string().min(3).max(100),
+    email: z.string().email(),
+    password: z
+      .string()
+      .min(8)
+      .max(15)
+      .refine(
+        (value) =>
+          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w\d\s]).+$/.test(value),
+        {
+          message:
+            "Password must be at least 8 characters long with max 15 characters and have at least one uppercase letter, one lowercase letter, one special character, and one digit.",
+        }
+      ),
+  });
+
+  const parsedData = requiredBody.safeParse(req.body);
+
+  if (!parsedData.success) {
+    return res.json({
+      message: "Incorrect format",
+      error: parsedData.error,
+    });
+  }
+
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
